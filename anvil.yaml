@@ -1,0 +1,52 @@
+scheduled_tasks:
+- task_name: verify_media
+  time_spec:
+    n: 10
+    every: minute
+    at: {}
+  job_id: RKYENRQX
+dependencies: []
+services:
+- source: /runtime/services/tables.yml
+  client_config: {}
+  server_config: {}
+startup: {type: form, module: startup}
+package_name: Media_Manager
+allow_embedding: false
+name: Media Manager
+runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null,
+  server_persist: true}
+startup_form: null
+db_schema:
+  media:
+    client: none
+    server: full
+    columns:
+    - name: hash
+      admin_ui: {width: 200, order: 0}
+      type: string
+    - name: content
+      admin_ui: {width: 200, order: 1}
+      type: media
+    - name: verified
+      admin_ui: {width: 200, order: 2}
+      type: bool
+    title: media
+  tasks:
+    client: none
+    server: full
+    columns:
+    - name: task_type
+      admin_ui: {width: 200, order: 0}
+      type: string
+    - name: task_id
+      admin_ui: {width: 200, order: 1}
+      type: string
+    - name: started_at
+      admin_ui: {width: 200, order: 2}
+      type: datetime
+    - name: status
+      admin_ui: {width: 200, order: 3}
+      type: simpleObject
+    title: tasks
+renamed: true
