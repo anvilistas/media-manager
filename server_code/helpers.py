@@ -14,5 +14,6 @@ def hash_media(media):
 
 
 def boolean_from_string(value, default):
-    options = {True: ("true", "yes", "1"), False: ("false", "no", "0")}
+    options = {True: ["true", "yes", "1"], False: ["false", "no", "0"]}
+    options[default].append(None)
     return value in options[default]
