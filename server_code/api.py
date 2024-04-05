@@ -26,10 +26,14 @@ def _store_media(request, hash=None, verify=None, **kwargs):
         if not verified:
             return anvil.server.HttpResponse(400, "Invalid hash for given body")
 
-    if app_tables.media.get(hash=hash):
-        return anvil.server.HttpResponse(400, "Content already exists with this hash")
+    existing_row = app_tables.media.get(hash=hash)
+    if existing_row is None:
+        app_tables.media.add_row(hash=hash, content=content, verified=verified)
+    elif not existing_row["verified"]:
+        return anvil.server.HttpResponse(
+            400, "Unverified content already exists with this hash"
+        )
 
-    app_tables.media.add_row(hash=hash, content=content, verified=verified)
     return hash
 
 
