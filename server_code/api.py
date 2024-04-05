@@ -14,10 +14,7 @@ def _store_media(request, hash=None, verify=None, **kwargs):
     if not content:
         return
 
-    verify = verify or True
-    if isinstance(verify, str):
-        mapping = {"true": True, "false": False}
-        verify = mapping.get(verify.lower(), True)
+    verify =helpers.boolean_from_string(verify, default=True)
 
     verified = None
     if hash is None:
