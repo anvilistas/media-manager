@@ -1,6 +1,7 @@
 import datetime as dt
 
 import anvil.server
+import anvil.tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 
@@ -32,19 +33,27 @@ def verify_media():
         "verified": 0,
         "removed": 0,
     }
+    actions = {"verify": [], "remove": []}
     for row in rows[:BATCH_SIZE]:
         if not row["content"]:
-            row.delete()
-            result["removed"] += 1
+            actions["remove"].append(row)
             continue
 
         hash = helpers.hash_media(row["content"])
         if hash == row["hash"]:
-            row["verified"] = True
-            result["verified"] += 1
+            actions["verify"].append(row)
         else:
-            row.delete()
-            result["removed"] += 1
+            actions["remove"].append(row)
+
+        with anvil.tables.batch_update:
+            for row in actions["verify"]:
+                row.update(verified=True)
+                result["verified"] += 1
+
+        with anvil.tables.batch_delete:
+            for row in actions["remove"]:
+                row.delete()
+                result["removed"] += 1
 
     print(result)
     task_row.delete()
