@@ -14,7 +14,7 @@ def _store_media(request, hash=None, verify=None, **kwargs):
     if not content:
         return
 
-    verify =helpers.boolean_from_string(verify, default=True)
+    verify = helpers.boolean_from_string(verify, default=True)
 
     verified = None
     if hash is None:
@@ -33,10 +33,11 @@ def _store_media(request, hash=None, verify=None, **kwargs):
     return hash
 
 
+ACTIONS = {"GET": _fetch_media, "POST": _store_media}
+
+
 @anvil.server.http_endpoint("/media/:hash")
 def handle_media_request(hash, **kwargs):
     hash = hash or None
     request = anvil.server.request
-    actions = {"GET": _fetch_media, "POST": _store_media}
-    action = actions[request.method]
-    return action(request, hash, **kwargs)
+    return ACTIONS[request.method](request, hash, **kwargs)
