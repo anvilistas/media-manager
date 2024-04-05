@@ -51,15 +51,16 @@ def verify_media():
         else:
             actions["remove"].append(row)
 
-        with anvil.tables.batch_update:
-            for row in actions["verify"]:
-                row.update(verified=True)
-            result["verified"] += len(actions["verify"])
+    with anvil.tables.batch_update:
+        for row in actions["verify"]:
+            row.update(verified=True)
 
-        with anvil.tables.batch_delete:
-            for row in actions["remove"]:
-                row.delete()
-            result["removed"] += len(actions["remove"])
+    with anvil.tables.batch_delete:
+        for row in actions["remove"]:
+            row.delete()
+
+    result["verified"] += len(actions["verify"])
+    result["removed"] += len(actions["remove"])
 
     print(result)
     task_row.delete()
