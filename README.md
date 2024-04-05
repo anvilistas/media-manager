@@ -1,38 +1,41 @@
 # Media Manager
 
-The media manager uses [Content Addressable Storage](https://en.wikipedia.org/wiki/Content-addressable_storage)
+Media objects can increase the size of your app's tables making the app difficult to clone.
+
+Instead, the Media Manager can store those objects in a separate app and give you a hash value
+to use for later retrieval.
+
+Any time you would normally add a media column to a table, you instead add a text column, use it
+to store the hash value of the media object and let the media manager store the object itself.
+
+The Media Manager is an implementation of  [Content Addressable Storage](https://en.wikipedia.org/wiki/Content-addressable_storage)
 to store anvil media objects.
-
-Each object in the store is indexed by its hash value and can be retrieved using that value as an id.
-
-The hash can either be computed prior to storing or the app itself will calculate the hash. If the hash
-is passed in from elsewhere, it must be verified before the object becomes available. The
-verification can be carried out immediately or will eventually be done by a background task.
-
-If that verification fails, the object is removed from the store.
 
 ## Fetching Media
 
-Make a `GET` request to the app's `media` endpoint passing the object's id in the path.
+Make a `GET` request to the app's `media` endpoint passing the object's hash value in the path.
 
 Using anvil's `http` module:
 
 ```python
 import anvil.http
 
-obj = anvil.http.request("<media-manager-url>/_/api/media/<object_id>")
+obj = anvil.http.request("<media-manager-url>/_/api/media/<hash_value>")
 ```
 
 ## Storing Media
 
 Make a 'POST' request to the app's `media` endpoint, passing the object in the request body.
 
+The response will return the hash value of the object which you could store in your app's
+data tables.
+
 Using anvil's `http` module:
 
 ```python
 import anvil.http
 
-anvil.http.request(
+hash_value = anvil.http.request(
     url="<media-manager-url>/_/api/media",
     method="POST",
     data=obj,
@@ -42,16 +45,22 @@ anvil.http.request(
 If you already have the hash for the media object, you can pass that to the endpoint:
 
 ```python
+from hashlib import sha256
 import anvil.http
 
+hasher = sha256()
+hasher.update(obj.get_bytes())
+hash_value = hasher.hexdigest()
+
 anvil.http.request(
-    url="<media-manager-url>/_/api/media/<hash value>",
+    url=f"<media-manager-url>/_/api/media/{hash_value}",
     method="POST",
     data=obj,
 )
 ```
-by default, the hash will be verified before the call completes. If you wish to defer
-the verification, you can use a query string parameter in the url:
+by default, the hash will be verified before the call completes. However, that can take
+some time if the media object is large. You can choose to defer
+the verification by using a query string parameter in the url:
 
 ```python
 import anvil.http
@@ -62,3 +71,6 @@ anvil.http.request(
     data=obj,
 )
 ```
+In this case, a background task will carry out the verification at some point later. The
+media object will be unavailable until that verification succeeds. If it fails, the object
+is removed from the store.
