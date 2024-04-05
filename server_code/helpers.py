@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: MIT
+#
+# Copyright (c) 2024 The Anvil Extras project team members listed at
+# https://github.com/anvilistas/media-manager/graphs/contributors
+#
+# This software is published at https://github.com/anvilistas/media-manager
 from hashlib import sha256
 
 
