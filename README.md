@@ -87,5 +87,5 @@ from . import tests; tests.run()
 
 You can increase the verbosity of the test output:
 ```py
-from .import tests; test.run(verbosity=2)
+from . import tests; test.run(verbosity=2)
 ```
