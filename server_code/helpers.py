@@ -16,7 +16,7 @@ def hash_media(media):
 def boolean_from_string(value, default=False):
     options = {True: ["true", "yes", "1"], False: ["false", "no", "0"]}
     options[default].extend([None, ""])
-    str_to_bool = {v: _bool for _bool, _list in options.items() for v in _list }
+    str_to_bool = {v: _bool for _bool, _list in options.items() for v in _list}
     if value is not None:
         value = value.lower()
     return str_to_bool.get(value, default)
