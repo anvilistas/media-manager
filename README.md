@@ -11,7 +11,58 @@ to store the hash value of the media object and let the media manager store the 
 The Media Manager is an implementation of  [Content Addressable Storage](https://en.wikipedia.org/wiki/Content-addressable_storage)
 to store anvil media objects.
 
-## Fetching Media
+## Installation
+
+The Media Manager is a standalone app and is not intended to be used as a dependency.
+
+Instead, you will need to create a blank anvil app and use git on your local machine to
+fetch the code from this repository and push it to anvil.
+
+### Create and Clone a Blank App
+* In your browser, create a new, blank app from within the Anvil IDE.
+* From the 'Version History' tab, click the dropdown menu and click the 'Clone with Git' button.
+* Copy the clone command (the second displayed option) to you clipboard.
+* In your terminal, navigate to a folder where you would like to create your local copy
+* Paste the command from your clipboard into your terminal and run it.
+* You should now have a new folder named with the ID of your new app. You can rename
+that folder to something more meaningful if you wish.
+
+### Configure the Remote Repositories
+Your local repository is now configured with a known remote repository pointing to your copy of the app at Anvil.
+That remote is currently named 'origin'. We will now rename it to something more meaningful and also add a second remote pointing to the repository on github.
+
+* In your terminal, navigate to your new folder.
+* Rename the 'origin' remote to 'anvil' with the command:
+
+.. code-block::
+
+    git remote rename origin anvil
+
+* Add the github repository with the command:
+
+.. code-block::
+
+    git remote add github git@github.com:anvilistas/media-manager.git
+
+### Update your local app
+To update your app, we will now fetch the latest version from github to your local copy and push it from there to Anvil.
+
+* In your terminal, fetch the lastest code from github using the commands:
+
+.. code-block::
+
+    git fetch github
+    git reset --hard github/main
+
+* Finally, push those changes to your copy of the app at Anvil:
+
+.. code-block::
+
+    git push -f anvil
+
+## Usage
+
+### Fetching Media
 
 Make a `GET` request to the app's `media` endpoint passing the object's hash value in the path.
 
@@ -26,7 +77,7 @@ url = "<media-manager-url>/_/api/media/<hash_value>"
 obj = anvil.http.request(url, username="<username">, password="<password>")
 ```
 
-## Storing Media
+### Storing Media
 
 Make a 'POST' request to the app's `media` endpoint, passing the object in the request body.
 
@@ -102,4 +153,12 @@ from . import tests; tests.run()
 You can increase the verbosity of the test output:
 ```py
 from . import tests; test.run(verbosity=2)
+```
+
+If you have cloned this repository to your local machine, you can also run the tests
+from your terminal:
+
+```bash
+cd server_code
+python -m unittest
 ```
