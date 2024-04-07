@@ -46,7 +46,7 @@ def _store_media(request, hash=None, verify=None, **kwargs):
 ACTIONS = {"GET": _fetch_media, "POST": _store_media}
 
 
-@anvil.server.http_endpoint("/media/:hash")
+@anvil.server.http_endpoint("/media/:hash", authenticate_users=True)
 def handle_media_request(hash, **kwargs):
     hash = hash or None
     request = anvil.server.request
