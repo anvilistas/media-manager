@@ -15,12 +15,15 @@ to store anvil media objects.
 
 Make a `GET` request to the app's `media` endpoint passing the object's hash value in the path.
 
+You will also need to pass a valid username and password using HTTP basic authentication.
+
 Using anvil's `http` module:
 
 ```python
 import anvil.http
 
-obj = anvil.http.request("<media-manager-url>/_/api/media/<hash_value>")
+url = "<media-manager-url>/_/api/media/<hash_value>"
+obj = anvil.http.request(url, username="<username">, password="<password>")
 ```
 
 ## Storing Media
@@ -30,15 +33,20 @@ Make a 'POST' request to the app's `media` endpoint, passing the object in the r
 The response will return the hash value of the object which you could store in your app's
 data tables.
 
+Again, you will need to provide a valid username and password.
+
 Using anvil's `http` module:
 
 ```python
 import anvil.http
 
+url="<media-manager-url>/_/api/media",
 hash_value = anvil.http.request(
-    url="<media-manager-url>/_/api/media",
+    url,
     method="POST",
     data=obj,
+    username="<username>",
+    password="<password>",
 )
 ```
 
@@ -52,10 +60,13 @@ hasher = sha256()
 hasher.update(obj.get_bytes())
 hash_value = hasher.hexdigest()
 
+url=f"<media-manager-url>/_/api/media/{hash_value}",
 anvil.http.request(
-    url=f"<media-manager-url>/_/api/media/{hash_value}",
+    url,
     method="POST",
     data=obj,
+    username="<username>",
+    password="<password>",
 )
 ```
 by default, the hash will be verified before the call completes. However, that can take
@@ -65,10 +76,13 @@ the verification by using a query string parameter in the url:
 ```python
 import anvil.http
 
+url="<media-manager-url>/_/api/media/<hash value>?verify=false",
 anvil.http.request(
-    url="<media-manager-url>/_/api/media/<hash value>?verify=false",
+    url,
     method="POST",
     data=obj,
+    username="<username>",
+    password="<password>",
 )
 ```
 In this case, a background task will carry out the verification at some point later. The
