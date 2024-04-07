@@ -13,7 +13,17 @@ def hash_media(media):
     return hasher.hexdigest()
 
 
-def boolean_from_string(value, default):
-    options = {True: ["true", "yes", "1"], False: ["false", "no", "0"]}
-    options[default].append(None)
-    return value in options[default]
+def boolean_from_string(value, default=False):
+    if value is not None:
+        value = value.lower()
+    options = {
+        "true": True,
+        "yes": True,
+        "1": True,
+        "false": False,
+        "no": False,
+        "0": False,
+        "": default,
+        None: default,
+    }
+    return options.get(value, default)

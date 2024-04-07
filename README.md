@@ -74,3 +74,18 @@ anvil.http.request(
 In this case, a background task will carry out the verification at some point later. The
 media object will be unavailable until that verification succeeds. If it fails, the object
 is removed from the store.
+
+## Development
+
+### Running the Tests
+
+from the app's server console:
+
+```py
+from . import tests; tests.run()
+```
+
+You can increase the verbosity of the test output:
+```py
+from . import tests; test.run(verbosity=2)
+```
