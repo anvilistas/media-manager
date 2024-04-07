@@ -10,6 +10,10 @@ services:
 - source: /runtime/services/tables.yml
   client_config: {}
   server_config: {}
+- source: /runtime/services/anvil/users.yml
+  client_config: {allow_signup: false, enable_automatically: true, use_email: true,
+    confirm_email: false}
+  server_config: {user_table: users}
 startup: {type: form, module: startup}
 package_name: Media_Manager
 allow_embedding: false
@@ -49,4 +53,27 @@ db_schema:
       admin_ui: {width: 200, order: 3}
       type: simpleObject
     title: tasks
+  users:
+    client: none
+    server: full
+    columns:
+    - name: email
+      admin_ui: {order: 0, width: 200}
+      type: string
+    - name: enabled
+      admin_ui: {order: 1, width: 200}
+      type: bool
+    - name: last_login
+      admin_ui: {order: 2, width: 200}
+      type: datetime
+    - name: password_hash
+      admin_ui: {order: 3, width: 200}
+      type: string
+    - name: n_password_failures
+      admin_ui: {order: 4, width: 200}
+      type: number
+    - name: confirmed_email
+      admin_ui: {order: 5, width: 200}
+      type: bool
+    title: Users
 renamed: true
