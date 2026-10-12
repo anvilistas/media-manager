@@ -91,7 +91,7 @@ Using anvil's `http` module:
 ```python
 import anvil.http
 
-url="<media-manager-url>/_/api/media",
+url = ("<media-manager-url>/_/api/media",)
 hash_value = anvil.http.request(
     url,
     method="POST",
@@ -111,7 +111,7 @@ hasher = sha256()
 hasher.update(obj.get_bytes())
 hash_value = hasher.hexdigest()
 
-url=f"<media-manager-url>/_/api/media/{hash_value}",
+url = (f"<media-manager-url>/_/api/media/{hash_value}",)
 anvil.http.request(
     url,
     method="POST",
@@ -127,7 +127,7 @@ the verification by using a query string parameter in the url:
 ```python
 import anvil.http
 
-url="<media-manager-url>/_/api/media/<hash value>?verify=false",
+url = ("<media-manager-url>/_/api/media/<hash value>?verify=false",)
 anvil.http.request(
     url,
     method="POST",
@@ -147,12 +147,16 @@ is removed from the store.
 from the app's server console:
 
 ```py
-from . import tests; tests.run()
+from . import tests
+
+tests.run()
 ```
 
 You can increase the verbosity of the test output:
 ```py
-from . import tests; test.run(verbosity=2)
+from . import tests
+
+test.run(verbosity=2)
 ```
 
 If you have cloned this repository to your local machine, you can also run the tests
